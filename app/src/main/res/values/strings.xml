@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">RastreamentoPacotesApp</string>
+    <string name="app_title">Rastreamento de Pacotes</string>
+    <string name="forgot_password"><u>Esqueceu a senha?</u></string>
+    <string name="signup">Cadastrar-se</string>
+    <string name="login">Login</string>
+    <string name="no_account">Não tem cadastro?</string>
+    <string name="pacote_transporte">Em Transporte</string>
+    <string name="pacote_historico">Histórico</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="listaRemetente">De: %s</string>
+    <string name="listaDestinatario">Para: %s</string>
+    <string name="label_localizacao_atual">Localização Atual:</string>
+    <string name="iconstatus">IconStatus</string>
+    <string name="data_postagem">Data de Postagem:</string>
+    <string name="label_destino">Destinatário:</string>
+    <string name="label_remetente">Remetente:</string>
+</resources>

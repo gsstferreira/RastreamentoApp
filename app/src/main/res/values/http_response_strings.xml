@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="response400">Erro ao tentar a requisição ao servidor|(HTTP Status Code 400: BadRequest)</string>
+    <string name="response401">Erro ao autenticar o usuário para fazer a requisição|(HTTP Status Code 401: Unauthorized)</string>
+    <string name="response403">Erro ao realizar a requisição com o usuário atual|(HTTP Status Code 403: Forbidden)</string>
+    <string name="response404">Erro ao tentar localizar o servidor|(HTTP Status Code 404: NotFound)</string>
+    <string name="response500">O servidor não foi capaz de processar a requisição|(HTTP Status Code 500: InternalServerError)</string>
+    <string name="responseOther">Erro Desconhecido</string>
+
+    <string name="responseTimeout">O servidor não respondeu dentro do tempo esperado|(Socket Timeout Exception)</string>
+    <string name="responseMalformed">Erro ao tentar criar a requisição|(Malformed URL Exception)</string>
+    <string name="responseProtocol">Erro ao tentar criar a requisição|(Protocol Exception)</string>
+    <string name="responseJson">Erro ao receber a resposta do servidor|(JSON Exception)</string>
+    <string name="responseIO">Erro ao realizar comunicação com o servidor|(IO Exception)</string>
+
+</resources>

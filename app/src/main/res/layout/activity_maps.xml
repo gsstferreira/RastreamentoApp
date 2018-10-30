@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="40"
+        tools:context=".Activities.DetalhesPacoteActivity" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="60"
+        android:layout_marginStart="16sp"
+        android:layout_marginEnd="16sp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_marginTop="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="6sp">
+
+                <ImageView
+                    android:id="@+id/imgStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_pacote_em_agencia"
+                    android:contentDescription="@string/iconstatus" />
+
+                <TextView
+                    android:id="@+id/textStatus"
+                    android:layout_marginStart="12sp"
+                    android:layout_width="wrap_content"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Light.Widget.PopupMenu.Large"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/formEmAgencia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_localizacao_atual"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/textRuaNum"
+                    android:paddingStart="16sp"
+                    android:paddingEnd="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/textBairroCep"
+                    android:paddingStart="16sp"
+                    android:paddingEnd="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/textCidadeEstado"
+                    android:paddingStart="16sp"
+                    android:paddingEnd="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <View
+                    android:layout_marginTop="3sp"
+                    android:layout_marginBottom="3sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5sp"
+                    android:background="@color/cardview_dark_background"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_remetente"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/remetente"
+                    android:paddingStart="16sp"
+                    android:paddingEnd="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <View
+                    android:layout_marginTop="3sp"
+                    android:layout_marginBottom="3sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5sp"
+                    android:background="@color/cardview_dark_background"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_destino"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/destinatario"
+                    android:paddingStart="16sp"
+                    android:paddingEnd="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/destinoRuaNum"
+                    android:paddingStart="16sp"
+                    android:paddingEnd="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/destinoBairroCep"
+                    android:paddingStart="16sp"
+                    android:paddingEnd="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/destinoCidadeEstado"
+                    android:paddingStart="16sp"
+                    android:paddingEnd="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <View
+                    android:layout_marginTop="3sp"
+                    android:layout_marginBottom="3sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5sp"
+                    android:background="@color/cardview_dark_background"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:text="@string/data_postagem"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/textDataPostagem"
+                    android:layout_marginStart="3sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/labelDataChegada"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/textDataChegada"
+                    android:layout_marginStart="3sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+            </LinearLayout>
+
+            <View
+                android:layout_marginTop="3sp"
+                android:layout_marginBottom="3sp"
+                android:layout_width="match_parent"
+                android:layout_height="0.5sp"
+                android:background="@color/cardview_dark_background"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
