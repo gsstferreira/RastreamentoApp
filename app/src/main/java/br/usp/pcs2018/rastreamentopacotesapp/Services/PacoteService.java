@@ -19,7 +19,7 @@ public abstract class PacoteService {
 
         String url = URL_API_PACOTE.concat("Pacote/ObterPacotesAtivos");
 
-        HttpHeader header = new HttpHeader("Authorization", Data.getUsuario().getId());
+        HttpHeader header = new HttpHeader("Authorization", Data.getUsuario().getUsuarioId());
 
         List<HttpHeader> headers = new ArrayList<>();
         headers.add(header);
@@ -32,7 +32,7 @@ public abstract class PacoteService {
 
         String url = URL_API_PACOTE.concat("Pacote/ObterPacotesHistorico");
 
-        HttpHeader header = new HttpHeader("Authorization", Data.getUsuario().getId());
+        HttpHeader header = new HttpHeader("Authorization", Data.getUsuario().getUsuarioId());
 
         List<HttpHeader> headers = new ArrayList<>();
         headers.add(header);
@@ -45,7 +45,7 @@ public abstract class PacoteService {
 
         String url = URL_API_PACOTE.concat("Pacote/ObterDetalhesPacote");
 
-        HttpHeader header = new HttpHeader("Authorization", Data.getUsuario().getId());
+        HttpHeader header = new HttpHeader("Authorization", Data.getUsuario().getUsuarioId());
 
         List<HttpHeader> headers = new ArrayList<>();
         headers.add(header);

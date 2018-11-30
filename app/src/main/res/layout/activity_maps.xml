@@ -53,6 +53,29 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/listaItens"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_conteudo"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black"/>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_marginTop="3sp"
+                android:layout_marginBottom="3sp"
+                android:layout_width="match_parent"
+                android:layout_height="0.5sp"
+                android:background="@color/cardview_dark_background"/>
+
+            <LinearLayout
                 android:id="@+id/formEmAgencia"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

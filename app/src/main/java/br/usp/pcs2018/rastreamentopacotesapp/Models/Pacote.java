@@ -11,6 +11,7 @@ public class Pacote {
     private String Destinatario;
     private Date DataPostagem;
     private List<Rota> Rotas;
+    private List<Item> Conteudo;
     private boolean Entregue;
     private Endereco Destino;
 
@@ -72,5 +73,13 @@ public class Pacote {
 
     public void setDestino(Endereco destino) {
         Destino = destino;
+    }
+
+    public List<Item> getConteudo() {
+        return Conteudo;
+    }
+
+    public void setConteudo(List<Item> conteudo) {
+        Conteudo = conteudo;
     }
 }

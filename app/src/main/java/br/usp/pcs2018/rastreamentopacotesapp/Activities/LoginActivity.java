@@ -1,34 +1,18 @@
 package br.usp.pcs2018.rastreamentopacotesapp.Activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-
-import br.usp.pcs2018.rastreamentopacotesapp.AsyncTasks.HttpRequestTask;
-import br.usp.pcs2018.rastreamentopacotesapp.Global.Data;
 import br.usp.pcs2018.rastreamentopacotesapp.Global.Metodos;
-import br.usp.pcs2018.rastreamentopacotesapp.Models.HttpRequestObjects.HttpHeader;
 import br.usp.pcs2018.rastreamentopacotesapp.Models.HttpRequestObjects.HttpResponse;
-import br.usp.pcs2018.rastreamentopacotesapp.Models.User;
 import br.usp.pcs2018.rastreamentopacotesapp.R;
 import br.usp.pcs2018.rastreamentopacotesapp.Services.UsuarioService;
 
 import static br.usp.pcs2018.rastreamentopacotesapp.Global.Constantes.ASYNC_HTTP_CODE;
-import static br.usp.pcs2018.rastreamentopacotesapp.Global.Constantes.URL_API_GERAL;
 
 public class LoginActivity extends  _BaseActivity {
 

@@ -15,4 +15,5 @@
     <string name="data_postagem">Data de Postagem:</string>
     <string name="label_destino">Destinatário:</string>
     <string name="label_remetente">Remetente:</string>
+    <string name="label_conteudo">Conteúdo:</string>
 </resources>

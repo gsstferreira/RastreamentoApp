@@ -9,7 +9,7 @@
     </style>
 
     <style name="ButtonTheme" parent="Base.TextAppearance.AppCompat.Button">
-        <item name="android:backgroundTint">@color/colorAccent</item>
+        <item name="android:colorBackground">@color/colorAccent</item>
     </style>
 
 </resources>

@@ -1,17 +1,17 @@
 package br.usp.pcs2018.rastreamentopacotesapp.Global;
 
 
-import br.usp.pcs2018.rastreamentopacotesapp.Models.User;
+import br.usp.pcs2018.rastreamentopacotesapp.Models.Usuario;
 
 public abstract class Data {
 
-    private static User usuario;
+    private static Usuario usuario;
 
-    public static User getUsuario() {
+    public static Usuario getUsuario() {
         return usuario;
     }
 
-    public static void setUsuario(User usuario) {
+    public static void setUsuario(Usuario usuario) {
         Data.usuario = usuario;
     }
 }

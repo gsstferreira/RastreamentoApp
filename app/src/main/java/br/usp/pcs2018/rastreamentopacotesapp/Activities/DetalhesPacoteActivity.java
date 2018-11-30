@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,6 +30,7 @@ import br.usp.pcs2018.rastreamentopacotesapp.AsyncTasks.TimerTask;
 import br.usp.pcs2018.rastreamentopacotesapp.Global.Metodos;
 import br.usp.pcs2018.rastreamentopacotesapp.Models.Endereco;
 import br.usp.pcs2018.rastreamentopacotesapp.Models.HttpRequestObjects.HttpResponse;
+import br.usp.pcs2018.rastreamentopacotesapp.Models.Item;
 import br.usp.pcs2018.rastreamentopacotesapp.Models.Localizacao;
 import br.usp.pcs2018.rastreamentopacotesapp.Models.Pacote;
 import br.usp.pcs2018.rastreamentopacotesapp.Models.Rota;
@@ -55,6 +57,8 @@ public class DetalhesPacoteActivity extends _BaseActivity implements OnMapReadyC
     private TextView textRuaNum;
     private TextView textBairroCep;
     private TextView textCidadeEstado;
+
+    private LinearLayout listaItens;
 
     private TextView remetente;
 
@@ -89,6 +93,8 @@ public class DetalhesPacoteActivity extends _BaseActivity implements OnMapReadyC
         textRuaNum = findViewById(R.id.textRuaNum);
         textBairroCep = findViewById(R.id.textBairroCep);
         textCidadeEstado = findViewById(R.id.textCidadeEstado);
+
+        listaItens = findViewById(R.id.listaItens);
 
         remetente = findViewById(R.id.remetente);
 
@@ -203,7 +209,6 @@ public class DetalhesPacoteActivity extends _BaseActivity implements OnMapReadyC
         LatLngBounds.Builder bounds = new LatLngBounds.Builder();
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.marker_maps_18);
-
         BitmapDescriptor descr = BitmapDescriptorFactory.fromBitmap(bitmap);
 
         for(Rota r:this.pacote.getRotas()) {
@@ -213,28 +218,44 @@ public class DetalhesPacoteActivity extends _BaseActivity implements OnMapReadyC
                     .color(getResources().getColor(R.color.colorPrimaryDark))
                     .visible(true);
 
+            MarkerOptions markOrigem = new MarkerOptions()
+                    .position(r.getOrigem().getLatLng())
+                    .visible(true)
+                    .icon(descr)
+                    .anchor(0.5f,0.5f);
+
+            mMap.addMarker(markOrigem);
+
+            MarkerOptions markDestino = new MarkerOptions()
+                    .position(r.getDestino().getLatLng())
+                    .visible(true)
+                    .icon(descr)
+                    .anchor(0.5f,0.5f);
+
+            mMap.addMarker(markDestino);
+
+            bounds.include(r.getOrigem().getLatLng());
+            bounds.include(r.getDestino().getLatLng());
+
             for(Localizacao l:r.getAmostrasLocalizacao()) {
 
                 LatLng ll = new LatLng(l.getLatitude(),l.getLongitude());
 
-                MarkerOptions mark = new MarkerOptions()
-                        .position(ll)
-                        .snippet(l.getHorarioAmostra().toString())
-                        .visible(true);
+                if((pacote.getRotas().indexOf(r) == pacote.getRotas().size() - 1) && (r.getAmostrasLocalizacao().indexOf(l) == r.getAmostrasLocalizacao().size() - 1)) {
+                    MarkerOptions mark = new MarkerOptions()
+                            .position(ll)
+                            .snippet(l.getHorarioAmostra().toString())
+                            .visible(true);
 
-                if(!(pacote.getRotas().indexOf(r) == pacote.getRotas().size() -1) || !(r.getAmostrasLocalizacao().indexOf(l) == r.getAmostrasLocalizacao().size() - 1)) {
-                    mark = mark.icon(descr).anchor(0.5f,0.5f);
+                    mMap.addMarker(mark);
                 }
-
-                bounds.include(ll);
                 opt = opt.add(ll);
-                mMap.addMarker(mark);
             }
 
             mMap.addPolyline(opt);
 
         }
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(),100));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(),50));
 
     }
 
@@ -307,6 +328,20 @@ public class DetalhesPacoteActivity extends _BaseActivity implements OnMapReadyC
 
 
         textDataPostagem.setText(dateFormatter.format(pacote.getDataPostagem()));
+
+
+        for (Item i:pacote.getConteudo()) {
+
+            View v = getLayoutInflater().inflate(R.layout.view_itens_pacote,null);
+            TextView t1 = v.findViewById(R.id.itemNome);
+            TextView t2 = v.findViewById(R.id.itemQtd);
+
+            t1.setText(i.getDescricao());
+            t2.setText(String.format(Locale.getDefault(),"x %d",i.getQuantidade()));
+
+            listaItens.addView(v);
+        }
+
 
     }
 }

@@ -11,7 +11,6 @@ import android.widget.TextView;
 import java.io.UnsupportedEncodingException;
 
 import br.usp.pcs2018.rastreamentopacotesapp.AsyncTasks.TimerTask;
-import br.usp.pcs2018.rastreamentopacotesapp.Fragments.ListaPacotesFragment;
 import br.usp.pcs2018.rastreamentopacotesapp.Models.HttpRequestObjects.HttpResponse;
 import br.usp.pcs2018.rastreamentopacotesapp.R;
 import br.usp.pcs2018.rastreamentopacotesapp.Services.UsuarioService;
@@ -59,11 +58,17 @@ public class StartActivity extends  _BaseActivity {
 
                     builder.create().show();
                 }
-
+                else {
+                    Intent intent = new Intent(StartActivity.this,ListaPacotesActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                }
                 break;
             case ASYNC_TIMER_CODE:
                 loadingCount++;
-                updateText();
+                update();
                 break;
             default:
                 break;
@@ -82,10 +87,10 @@ public class StartActivity extends  _BaseActivity {
     public void onResume() {
         super.onResume();
 
-        updateText();
+        update();
     }
 
-    private void updateText() {
+    private void update() {
 
         TimerTask timer;
 
@@ -96,16 +101,11 @@ public class StartActivity extends  _BaseActivity {
                 timer.execute();
                 break;
             case 1:
-                textoLoading.setText("Buscando dados...");
-                timer = new TimerTask(this,1,2000);
-                timer.execute();
-                break;
-            case 2:
                 textoLoading.setText("Carregando app...");
                 timer = new TimerTask(this,1,1000);
                 timer.execute();
                 break;
-            case 3:
+            case 2:
 
                 SharedPreferences sharedPrefs = getSharedPreferences("LoginData",0);
 
@@ -138,13 +138,6 @@ public class StartActivity extends  _BaseActivity {
                     startActivity(intent);
                     finish();
                 }
-                break;
-            case 4:
-                Intent intent = new Intent(StartActivity.this,ListaPacotesActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
                 break;
             default:
                 finish();

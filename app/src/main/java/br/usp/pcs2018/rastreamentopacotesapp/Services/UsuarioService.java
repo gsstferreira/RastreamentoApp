@@ -18,7 +18,7 @@ import br.usp.pcs2018.rastreamentopacotesapp.Global.Data;
 import br.usp.pcs2018.rastreamentopacotesapp.Global.Metodos;
 import br.usp.pcs2018.rastreamentopacotesapp.Models.HttpRequestObjects.HttpHeader;
 import br.usp.pcs2018.rastreamentopacotesapp.Models.HttpRequestObjects.HttpResponse;
-import br.usp.pcs2018.rastreamentopacotesapp.Models.User;
+import br.usp.pcs2018.rastreamentopacotesapp.Models.Usuario;
 
 import static br.usp.pcs2018.rastreamentopacotesapp.Global.Constantes.URL_API_GERAL;
 
@@ -50,8 +50,8 @@ public abstract class UsuarioService {
     public static boolean validarLogin(Context context, HttpResponse resp, String email, String senha) {
 
         if(resp.getResponseStatus()) {
-            User u = new User();
-            u.setId(resp.getResponseMessage());
+            Usuario u = new Usuario();
+            u.setUsuarioId(resp.getResponseMessage());
 
             Data.setUsuario(u);
 

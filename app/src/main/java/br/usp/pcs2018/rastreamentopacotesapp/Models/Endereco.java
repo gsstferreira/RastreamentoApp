@@ -1,5 +1,7 @@
 package br.usp.pcs2018.rastreamentopacotesapp.Models;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Endereco {
 
     private String Logradouro;
@@ -10,7 +12,7 @@ public class Endereco {
     private String Municipio;
     private String Estado;
     private String Pais;
-    private double Latitute;
+    private double Latitude;
     private double Longitude;
 
     public Endereco(){}
@@ -79,12 +81,12 @@ public class Endereco {
         Pais = pais;
     }
 
-    public double getLatitute() {
-        return Latitute;
+    public double getLatitude() {
+        return Latitude;
     }
 
-    public void setLatitute(double latitute) {
-        Latitute = latitute;
+    public void setLatitude(double latitude) {
+        Latitude = latitude;
     }
 
     public double getLongitude() {
@@ -93,5 +95,10 @@ public class Endereco {
 
     public void setLongitude(double longitude) {
         Longitude = longitude;
+    }
+
+    public LatLng getLatLng() {
+
+        return new LatLng(this.Latitude,this.Longitude);
     }
 }
