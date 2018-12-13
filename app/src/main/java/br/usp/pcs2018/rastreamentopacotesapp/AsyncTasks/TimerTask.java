@@ -7,18 +7,21 @@ import br.usp.pcs2018.rastreamentopacotesapp.Interfaces.AsyncResultListener;
 
 import static br.usp.pcs2018.rastreamentopacotesapp.Global.Constantes.ASYNC_TIMER_CODE;
 
-public class TimerTask extends AsyncTask<Void,Void,Boolean> {
+public class TimerTask extends AsyncTask<Void,Integer,Boolean> {
 
-    private Context originContext;
-    private int originId;
-
+    private int instanceId;
+    private long originId;
+    private AsyncResultListener listener;
     private int time;
 
-    public TimerTask(Context context, int originId, int waitTime) {
+    public long selfId;
 
-        this.originContext = context;
+    public TimerTask(Context context, int instanceId, int waitTime, long originId) {
+
+        this.listener = (AsyncResultListener) context;
+        this.instanceId = instanceId;
         this.originId = originId;
-
+        this.selfId = System.currentTimeMillis();
         this.time = waitTime;
     }
 
@@ -26,7 +29,14 @@ public class TimerTask extends AsyncTask<Void,Void,Boolean> {
     protected Boolean doInBackground(Void... params) {
 
         try {
-            Thread.sleep(time);
+
+            int limiteIter = time/500;
+            int i;
+
+            for(i = 0; i < limiteIter; i++) {
+                Thread.sleep(500);
+                listener.onAsyncUpdate((i+1)*100/limiteIter, ASYNC_TIMER_CODE, instanceId, originId);
+            }
             return true;
         }
         catch (Exception e) {
@@ -37,10 +47,8 @@ public class TimerTask extends AsyncTask<Void,Void,Boolean> {
     @Override
     protected void onPostExecute(Boolean b) {
 
-        AsyncResultListener listener = (AsyncResultListener) originContext;
-        listener.onAsyncFinished(b,originId,ASYNC_TIMER_CODE);
-
-        originContext = null;
+        listener.onAsyncFinished(b, instanceId,ASYNC_TIMER_CODE, originId,selfId);
+        listener = null;
     }
 
 }

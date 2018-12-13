@@ -16,4 +16,6 @@
     <string name="label_destino">Destinatário:</string>
     <string name="label_remetente">Remetente:</string>
     <string name="label_conteudo">Conteúdo:</string>
+    <string name="detalhesLoading">Carregando...</string>
+    <string name="detalhesProgress">Atualização em %d...</string>
 </resources>

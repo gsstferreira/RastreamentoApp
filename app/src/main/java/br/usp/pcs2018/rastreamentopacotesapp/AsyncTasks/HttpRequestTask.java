@@ -32,11 +32,15 @@ public class HttpRequestTask extends AsyncTask<Void,Void,HttpResponse> {
     private String method;
 
     private Context originContext;
-    private int originId;
+    private int instanceId;
+    private long originId;
+    private long selfId;
 
-    public HttpRequestTask(Context context,int originId,String Url,String Method,List<HttpHeader> Headers,String Content,int requestTimeOut, int responseTimeOut){
+
+    public HttpRequestTask(Context context, int instanceId, String Url, String Method, List<HttpHeader> Headers, String Content, int requestTimeOut, int responseTimeOut, long originId){
 
         this.originContext = context;
+        this.instanceId = instanceId;
         this.originId = originId;
 
         this.url = Url;
@@ -45,10 +49,13 @@ public class HttpRequestTask extends AsyncTask<Void,Void,HttpResponse> {
         this.method = Method;
         this.requestTimeOut = requestTimeOut;
         this.responseTimeOut = responseTimeOut;
+
+        this.selfId = System.currentTimeMillis();
     }
 
-    public HttpRequestTask(Context context,int originId,String Url, String Method, List<HttpHeader> Headers, JSONObject ContentJson, int requestTimeOut, int responseTimeOut){
+    public HttpRequestTask(Context context, int instanceId, String Url, String Method, List<HttpHeader> Headers, JSONObject ContentJson, int requestTimeOut, int responseTimeOut, long originId){
 
+        this.instanceId = instanceId;
         this.originId = originId;
 
         this.originContext = context;
@@ -81,7 +88,7 @@ public class HttpRequestTask extends AsyncTask<Void,Void,HttpResponse> {
     protected void onPostExecute(HttpResponse response) {
 
         AsyncResultListener listener = (AsyncResultListener) originContext;
-        listener.onAsyncFinished(response,originId,ASYNC_HTTP_CODE);
+        listener.onAsyncFinished(response, instanceId,ASYNC_HTTP_CODE, originId, selfId);
         originContext = null;
     }
 }

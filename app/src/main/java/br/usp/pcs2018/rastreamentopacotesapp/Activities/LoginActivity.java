@@ -23,7 +23,7 @@ public class LoginActivity extends  _BaseActivity {
     private String loginSenha;
 
     @Override
-    public void onAsyncFinished(Object obj, int callerCode, int type){
+    public void onAsyncFinished(Object obj, int callerCode, int type, long origin, long selfId){
 
         switch (type) {
 
@@ -46,9 +46,16 @@ public class LoginActivity extends  _BaseActivity {
     }
 
     @Override
+    public void onAsyncUpdate(int progresso, int type, int callerCode, long origin) {
+
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
         setContentView(R.layout.activity_login);
+
+        originId = System.currentTimeMillis();
 
         emailForm = findViewById(R.id.edit_email);
         senhaForm = findViewById(R.id.edit_senha);
@@ -69,7 +76,7 @@ public class LoginActivity extends  _BaseActivity {
                     loginEmail = emailForm.getText().toString();
                     loginSenha = senhaForm.getText().toString();
 
-                    UsuarioService.realizarLogin(LoginActivity.this,loginEmail,loginSenha);
+                    UsuarioService.realizarLogin(LoginActivity.this,loginEmail,loginSenha, originId);
                     progressDialog.show();
                 }
             }

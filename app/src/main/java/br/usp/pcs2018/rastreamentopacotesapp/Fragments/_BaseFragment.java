@@ -11,5 +11,6 @@ public abstract class _BaseFragment extends Fragment implements AsyncResultListe
 
     String origem;
     ProgressDialog progressDialog;
+    long originId = System.currentTimeMillis();
 
 }

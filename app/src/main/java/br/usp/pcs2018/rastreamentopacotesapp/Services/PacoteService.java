@@ -15,7 +15,7 @@ import static br.usp.pcs2018.rastreamentopacotesapp.Global.Constantes.URL_API_PA
 
 public abstract class PacoteService {
 
-    public static void buscarPacotesAtivos(Context context) {
+    public static void buscarPacotesAtivos(Context context, long originId) {
 
         String url = URL_API_PACOTE.concat("Pacote/ObterPacotesAtivos");
 
@@ -24,11 +24,11 @@ public abstract class PacoteService {
         List<HttpHeader> headers = new ArrayList<>();
         headers.add(header);
 
-        HttpRequestTask task = new HttpRequestTask(context,HttpRequestTask.PACOTES_ATIVOS,url,"GET",headers,"",5000,5000);
+        HttpRequestTask task = new HttpRequestTask(context,HttpRequestTask.PACOTES_ATIVOS,url,"GET",headers,"",5000,5000,originId);
         task.execute();
     }
 
-    public static void buscarPacotesHistorico(Context context) {
+    public static void buscarPacotesHistorico(Context context, long originId) {
 
         String url = URL_API_PACOTE.concat("Pacote/ObterPacotesHistorico");
 
@@ -37,11 +37,11 @@ public abstract class PacoteService {
         List<HttpHeader> headers = new ArrayList<>();
         headers.add(header);
 
-        HttpRequestTask task = new HttpRequestTask(context,HttpRequestTask.PACOTES_HISTORICO,url,"GET",headers,"",5000,5000);
+        HttpRequestTask task = new HttpRequestTask(context,HttpRequestTask.PACOTES_HISTORICO,url,"GET",headers,"",5000,5000,originId );
         task.execute();
     }
 
-    public static void buscarDetalhesPacote(Context context, String pacoteId) {
+    public static void buscarDetalhesPacote(Context context, String pacoteId, long originId) {
 
         String url = URL_API_PACOTE.concat("Pacote/ObterDetalhesPacote");
 
@@ -56,9 +56,35 @@ public abstract class PacoteService {
 
             obj.put("PacoteId",pacoteId);
 
-            HttpRequestTask task = new HttpRequestTask(context,HttpRequestTask.PACOTE_DETALHES,url,"POST",headers,obj,5000,5000);
+            HttpRequestTask task = new HttpRequestTask(context,HttpRequestTask.PACOTE_DETALHES,url,"POST",headers,obj,5000,5000, originId);
             task.execute();
         }
         catch (Exception ignored){}
+    }
+
+    public static void buscarPacotesAtivosAll(Context context, long originId) {
+
+        String url = URL_API_PACOTE.concat("Pacote/ObterPacotesAtivosAll");
+
+        HttpHeader header = new HttpHeader("Authorization", Data.getUsuario().getUsuarioId());
+
+        List<HttpHeader> headers = new ArrayList<>();
+        headers.add(header);
+
+        HttpRequestTask task = new HttpRequestTask(context,HttpRequestTask.PACOTES_ATIVOS,url,"GET",headers,"",5000,5000, originId);
+        task.execute();
+    }
+
+    public static void buscarPacotesHistoricoAll(Context context, long originId) {
+
+        String url = URL_API_PACOTE.concat("Pacote/ObterPacotesHistorico");
+
+        HttpHeader header = new HttpHeader("Authorization", Data.getUsuario().getUsuarioId());
+
+        List<HttpHeader> headers = new ArrayList<>();
+        headers.add(header);
+
+        HttpRequestTask task = new HttpRequestTask(context,HttpRequestTask.PACOTES_HISTORICO,url,"GET",headers,"",5000,5000, originId);
+        task.execute();
     }
 }

@@ -28,7 +28,7 @@ public class StartActivity extends  _BaseActivity {
     private int loadingCount = 0;
 
     @Override
-    public void onAsyncFinished(Object obj, int callerCode, int type){
+    public void onAsyncFinished(Object obj, int callerCode, int type, long origin, long selfId){
 
         switch (type) {
             case ASYNC_HTTP_CODE:
@@ -76,9 +76,16 @@ public class StartActivity extends  _BaseActivity {
     }
 
     @Override
+    public void onAsyncUpdate(int progresso, int type, int callerCode, long origin) {
+
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
         setContentView(R.layout.activity_start);
+
+        originId = System.currentTimeMillis();
 
         textoLoading = findViewById(R.id.textoLoading);
     }
@@ -97,12 +104,12 @@ public class StartActivity extends  _BaseActivity {
         switch (loadingCount) {
             case 0:
                 textoLoading.setText("Checando versão...");
-                timer = new TimerTask(this,1,3000);
+                timer = new TimerTask(this,1,3000, originId);
                 timer.execute();
                 break;
             case 1:
                 textoLoading.setText("Carregando app...");
-                timer = new TimerTask(this,1,1000);
+                timer = new TimerTask(this,1,1000, originId);
                 timer.execute();
                 break;
             case 2:
@@ -120,7 +127,7 @@ public class StartActivity extends  _BaseActivity {
 
                         textoLoading.setText("Realizando Login...");
 
-                        UsuarioService.realizarLogin(this,loginEmail,loginSenha);
+                        UsuarioService.realizarLogin(this,loginEmail,loginSenha, originId);
 
                     }
                     catch (UnsupportedEncodingException e){

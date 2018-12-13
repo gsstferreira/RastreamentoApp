@@ -1,6 +1,5 @@
 package br.usp.pcs2018.rastreamentopacotesapp.Fragments;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,15 +17,11 @@ import java.util.List;
 
 import br.usp.pcs2018.rastreamentopacotesapp.Activities.DetalhesPacoteActivity;
 import br.usp.pcs2018.rastreamentopacotesapp.Adapters.ListaPacotesAdapter;
-import br.usp.pcs2018.rastreamentopacotesapp.AsyncTasks.HttpRequestTask;
 import br.usp.pcs2018.rastreamentopacotesapp.Global.Metodos;
 import br.usp.pcs2018.rastreamentopacotesapp.Models.HttpRequestObjects.HttpResponse;
 import br.usp.pcs2018.rastreamentopacotesapp.Models.Pacote;
 import br.usp.pcs2018.rastreamentopacotesapp.R;
 import br.usp.pcs2018.rastreamentopacotesapp.Services.PacoteService;
-
-import static br.usp.pcs2018.rastreamentopacotesapp.Global.Constantes.ASYNC_HTTP_CODE;
-import static br.usp.pcs2018.rastreamentopacotesapp.Global.Constantes.ASYNC_TIMER_CODE;
 
 public class ListaPacotesFragment extends _BaseFragment {
 
@@ -64,7 +59,12 @@ public class ListaPacotesFragment extends _BaseFragment {
     }
 
     @Override
-    public void onAsyncFinished(Object obj, int callerCode, int type) {}
+    public void onAsyncFinished(Object obj, int callerCode, int type, long origin, long selfId) {}
+
+    @Override
+    public void onAsyncUpdate(int progresso, int type, int callerCode, long origin) {
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,10 +79,10 @@ public class ListaPacotesFragment extends _BaseFragment {
         progress.setVisibility(View.VISIBLE);
 
         if(!origem.equals("historico")) {
-            PacoteService.buscarPacotesAtivos(this.getContext());
+            PacoteService.buscarPacotesAtivosAll(this.getContext(), originId);
         }
         else {
-            PacoteService.buscarPacotesHistorico(this.getContext());
+            PacoteService.buscarPacotesHistoricoAll(this.getContext(), originId);
         }
 
         return view;

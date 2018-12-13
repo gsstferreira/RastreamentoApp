@@ -24,7 +24,7 @@ import static br.usp.pcs2018.rastreamentopacotesapp.Global.Constantes.URL_API_GE
 
 public abstract class UsuarioService {
 
-    public static void realizarLogin(Context context, String email, String senha) {
+    public static void realizarLogin(Context context, String email, String senha, long originId) {
 
         JSONObject json = new JSONObject();
 
@@ -38,7 +38,7 @@ public abstract class UsuarioService {
             List<HttpHeader> headers = new ArrayList<>();
             headers.add(header);
 
-            HttpRequestTask task = new HttpRequestTask(context,HttpRequestTask.USUARIO,url,"POST",headers,json,5000,5000);
+            HttpRequestTask task = new HttpRequestTask(context,HttpRequestTask.USUARIO,url,"POST",headers,json,5000,5000,originId);
 
             task.execute();
         }

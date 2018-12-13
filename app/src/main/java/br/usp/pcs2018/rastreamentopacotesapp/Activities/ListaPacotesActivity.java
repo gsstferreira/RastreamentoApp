@@ -1,14 +1,15 @@
 package br.usp.pcs2018.rastreamentopacotesapp.Activities;
 
 import android.os.Bundle;
-import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
 import br.usp.pcs2018.rastreamentopacotesapp.Adapters.TabLayoutAdapter;
 import br.usp.pcs2018.rastreamentopacotesapp.AsyncTasks.HttpRequestTask;
 import br.usp.pcs2018.rastreamentopacotesapp.Fragments.ListaPacotesFragment;
+import br.usp.pcs2018.rastreamentopacotesapp.Global.Data;
 import br.usp.pcs2018.rastreamentopacotesapp.Models.HttpRequestObjects.HttpResponse;
+import br.usp.pcs2018.rastreamentopacotesapp.Models.Usuario;
 import br.usp.pcs2018.rastreamentopacotesapp.R;
 
 import static br.usp.pcs2018.rastreamentopacotesapp.Global.Constantes.ASYNC_HTTP_CODE;
@@ -28,6 +29,14 @@ public class ListaPacotesActivity extends _BaseActivity {
 
         setContentView(R.layout.activity_lista_pacotes);
 
+        if(Data.getUsuario() == null) {
+            Data.setUsuario(new Usuario());
+        }
+
+        originId = System.currentTimeMillis();
+
+        Data.getUsuario().setUsuarioId("d55de58e-1945-41a2-9c22-5b9409bc21e9");
+
         tabs = findViewById(R.id.tabs_holder);
         container = findViewById(R.id.container);
 
@@ -38,7 +47,6 @@ public class ListaPacotesActivity extends _BaseActivity {
 
         adapter.addFragment(FragmentAtivo);
         adapter.addFragment(FragmentHistorico);
-
 
         container.setOffscreenPageLimit(2);
         container.setAdapter(adapter);
@@ -63,7 +71,7 @@ public class ListaPacotesActivity extends _BaseActivity {
     }
 
     @Override
-    public void onAsyncFinished(Object obj, int callerCode, int type) {
+    public void onAsyncFinished(Object obj, int callerCode, int type, long origin, long selfId) {
         switch (type) {
             case ASYNC_HTTP_CODE:
                 switch (callerCode){
@@ -82,5 +90,10 @@ public class ListaPacotesActivity extends _BaseActivity {
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onAsyncUpdate(int progresso, int type, int callerCode, long origin) {
+
     }
 }

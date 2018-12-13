@@ -3,11 +3,12 @@ package br.usp.pcs2018.rastreamentopacotesapp.Activities;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,8 +23,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 
 import br.usp.pcs2018.rastreamentopacotesapp.AsyncTasks.TimerTask;
@@ -74,15 +77,26 @@ public class DetalhesPacoteActivity extends _BaseActivity implements OnMapReadyC
 
     private SimpleDateFormat dateFormatter;
 
+    private TextView textProgress;
+    private ProgressBar barProgress;
+
+    private String pacoteId;
+    private int waitTimer;
+
+
+    private List<TimerTask> timers = new ArrayList<>();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        String pacoteId = getIntent().getStringExtra("PacoteId");
+        pacoteId = getIntent().getStringExtra("PacoteId");
         pacote = new Pacote();
         pacoteReady = false;
         mapReady = false;
+
+        originId = System.currentTimeMillis();
 
         dateFormatter = new SimpleDateFormat("dd/MM/yyyy hh:mm",Locale.getDefault());
 
@@ -108,15 +122,15 @@ public class DetalhesPacoteActivity extends _BaseActivity implements OnMapReadyC
         labelDataChegada = findViewById(R.id.labelDataChegada);
         textDataChegada = findViewById(R.id.textDataChegada);
 
+        textProgress = findViewById(R.id.textProgress);
+        barProgress = findViewById(R.id.barProgress);
+        textProgress.setText(R.string.detalhesLoading);
+        barProgress.setProgress(0);
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Carregando Pacote...");
 
-        mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-
-        PacoteService.buscarDetalhesPacote(this, pacoteId);
-        new TimerTask(DetalhesPacoteActivity.this,10,100).execute();
-        progressDialog.show();
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
     }
 
     @Override
@@ -124,6 +138,16 @@ public class DetalhesPacoteActivity extends _BaseActivity implements OnMapReadyC
         super.onResume();
 
         mapFragment.getMapAsync(this);
+        PacoteService.buscarDetalhesPacote(this, pacoteId, originId);
+        progressDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        for (TimerTask t:timers) {
+            t.cancel(true);
+        }
+        finish();
     }
 
     @Override
@@ -139,48 +163,91 @@ public class DetalhesPacoteActivity extends _BaseActivity implements OnMapReadyC
     }
 
     @Override
-    public void onAsyncFinished(Object obj, int callerCode, int type) {
+    public void onAsyncFinished(Object obj, int callerCode, int type, long origin, long selfId) {
 
         switch (type){
             case ASYNC_HTTP_CODE:
 
-                progressDialog.dismiss();
+                if(origin == originId) {
+                    progressDialog.dismiss();
 
-                switch(callerCode){
-                    case PACOTE_DETALHES:
+                    switch(callerCode){
+                        case PACOTE_DETALHES:
 
-                        HttpResponse resp = (HttpResponse) obj;
+                            HttpResponse resp = (HttpResponse) obj;
 
-                        if(resp.getResponseStatus()) {
+                            if(resp.getResponseStatus()) {
 
-                            this.pacote = (Pacote) Metodos.JsonToObject(resp.getResponseMessage(),Pacote.class);
-                            sortRotasLocalizacoes(this.pacote);
+                                this.pacote = (Pacote) Metodos.JsonToObject(resp.getResponseMessage(),Pacote.class);
+                                sortRotasLocalizacoes(this.pacote);
+                                pacoteReady = true;
+                                TimerTask t = new TimerTask(DetalhesPacoteActivity.this,10,100, this.originId);
+                                timers.add(t);
+                                t.execute();
+                            }
 
-                            pacoteReady = true;
-                        }
-                        break;
-                    default:
-                        break;
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 break;
             case ASYNC_TIMER_CODE:
+                if(origin == originId) {
 
-                switch (callerCode) {
-                    case 10:
-                        if(!pacoteReady || !mapReady) {
-                            new TimerTask(DetalhesPacoteActivity.this,10,100).execute();
+                    for (TimerTask t:timers) {
+                        if(t.selfId == selfId) {
+                            timers.remove(t);
+                            break;
                         }
-                        else {
-                            popularMapa();
-                            popularDados();
-                        }
-                        break;
-                    default:
-                        break;
+                    }
+
+                    switch (callerCode) {
+                        case 10:
+                            if(!pacoteReady || !mapReady) {
+                                new TimerTask(DetalhesPacoteActivity.this,10,100, originId).execute();
+                            }
+                            else {
+                                popularMapa();
+                                popularDados();
+
+                                TimerTask t = new TimerTask(DetalhesPacoteActivity.this,11,waitTimer, this.originId);
+                                timers.add(t);
+                                t.execute();
+                            }
+                            break;
+                        case 11:
+                            textProgress.setText(R.string.detalhesLoading);
+                            PacoteService.buscarDetalhesPacote(this, pacoteId, this.originId);
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void onAsyncUpdate(int progresso, int type, int callerCode, long origin) {
+
+        if(origin == this.originId){
+            switch (type) {
+                case ASYNC_TIMER_CODE:
+
+                    switch (callerCode) {
+                        case 11:
+                            updateProgress(progresso);
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -210,6 +277,8 @@ public class DetalhesPacoteActivity extends _BaseActivity implements OnMapReadyC
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.marker_maps_18);
         BitmapDescriptor descr = BitmapDescriptorFactory.fromBitmap(bitmap);
+
+        mMap.clear();
 
         for(Rota r:this.pacote.getRotas()) {
 
@@ -276,6 +345,8 @@ public class DetalhesPacoteActivity extends _BaseActivity implements OnMapReadyC
             labelDataChegada.setText("Estimativa de entrega:");
 
             if(r.getDataFim().after(r.getDataInicio())) {
+
+                waitTimer = 300000;
                 imgStatus.setImageResource(R.mipmap.ic_pacote_em_agencia);
                 textStatus.setText("Em Agência");
                 textStatus.setTextColor(getColor(R.color.yellow));
@@ -300,6 +371,7 @@ public class DetalhesPacoteActivity extends _BaseActivity implements OnMapReadyC
                 formEmAgencia.setVisibility(View.VISIBLE);
             }
             else {
+                waitTimer = 20000;
                 imgStatus.setImageResource(R.mipmap.ic_pacote_transporte);
                 textStatus.setText("Em Transporte");
                 textStatus.setTextColor(getColor(R.color.blue));
@@ -329,6 +401,7 @@ public class DetalhesPacoteActivity extends _BaseActivity implements OnMapReadyC
 
         textDataPostagem.setText(dateFormatter.format(pacote.getDataPostagem()));
 
+        listaItens.removeAllViews();
 
         for (Item i:pacote.getConteudo()) {
 
@@ -343,5 +416,20 @@ public class DetalhesPacoteActivity extends _BaseActivity implements OnMapReadyC
         }
 
 
+    }
+
+    private void updateProgress(final int progress) {
+
+        final int tempoRestante = waitTimer* (100 - progress)/100000;
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                textProgress.setText(String.format(Locale.getDefault(),getString(R.string.detalhesProgress),tempoRestante));
+                barProgress.setProgress(progress);
+
+            }
+        });
     }
 }
