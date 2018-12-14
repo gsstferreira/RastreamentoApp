@@ -143,11 +143,11 @@ public class DetalhesPacoteActivity extends _BaseActivity implements OnMapReadyC
     }
 
     @Override
-    public void onBackPressed() {
+    public void onStop() {
+        super.onStop();
         for (TimerTask t:timers) {
             t.cancel(true);
         }
-        finish();
     }
 
     @Override
@@ -310,6 +310,8 @@ public class DetalhesPacoteActivity extends _BaseActivity implements OnMapReadyC
 
                 LatLng ll = new LatLng(l.getLatitude(),l.getLongitude());
 
+                bounds.include(new LatLng(l.getLatitude(),l.getLongitude()));
+
                 if((pacote.getRotas().indexOf(r) == pacote.getRotas().size() - 1) && (r.getAmostrasLocalizacao().indexOf(l) == r.getAmostrasLocalizacao().size() - 1)) {
                     MarkerOptions mark = new MarkerOptions()
                             .position(ll)
@@ -324,58 +326,82 @@ public class DetalhesPacoteActivity extends _BaseActivity implements OnMapReadyC
             mMap.addPolyline(opt);
 
         }
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(),50));
+
+        if(pacote.getRotas().isEmpty()) {
+
+            MarkerOptions mark = new MarkerOptions()
+                    .position(pacote.getDestino().getLatLng())
+                    .title("Destino")
+                    .visible(true);
+
+            mMap.addMarker(mark);
+
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pacote.getDestino().getLatLng(),16));
+        }
+
+        else {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(),50));
+        }
 
     }
 
     private void popularDados() {
 
-        Rota r = pacote.getRotas().get(pacote.getRotas().size() - 1);
+        if(pacote.getRotas().size() > 0) {
+            Rota r = pacote.getRotas().get(pacote.getRotas().size() - 1);
 
-        if(pacote.isEntregue()) {
-            imgStatus.setImageResource(R.mipmap.ic_pacote_entregue);
-            textStatus.setText("Entregue");
-            textStatus.setTextColor(getColor(R.color.green));
+            if(pacote.isEntregue()) {
+                imgStatus.setImageResource(R.mipmap.ic_pacote_entregue);
+                textStatus.setText("Entregue");
+                textStatus.setTextColor(getColor(R.color.green));
 
-            labelDataChegada.setText("Data de entrega:");
-            textDataChegada.setText(dateFormatter.format(r.getDataFim()));
-        }
-        else {
-
-            labelDataChegada.setText("Estimativa de entrega:");
-
-            if(r.getDataFim().after(r.getDataInicio())) {
-
-                waitTimer = 300000;
-                imgStatus.setImageResource(R.mipmap.ic_pacote_em_agencia);
-                textStatus.setText("Em Agência");
-                textStatus.setTextColor(getColor(R.color.yellow));
-
-                Endereco e = r.getDestino();
-                String ruaNum;
-
-                if(e.getComplemento().isEmpty()) {
-                    ruaNum = String.format("%s, %s",e.getLogradouro(),e.getNumero());
-                }
-                else {
-                    ruaNum = String.format("%s, %s, %s",e.getLogradouro(),e.getNumero(),e.getComplemento());
-                }
-
-                String bairroCep = String.format("%s, %s",e.getCep(),e.getBairro());
-                String cidadeEstado = String.format("%s, %s",e.getMunicipio(),e.getEstado());
-
-                textRuaNum.setText(ruaNum);
-                textBairroCep.setText(bairroCep);
-                textCidadeEstado.setText(cidadeEstado);
-
-                formEmAgencia.setVisibility(View.VISIBLE);
+                labelDataChegada.setText("Data de entrega:");
+                textDataChegada.setText(dateFormatter.format(r.getDataFim()));
             }
             else {
-                waitTimer = 20000;
-                imgStatus.setImageResource(R.mipmap.ic_pacote_transporte);
-                textStatus.setText("Em Transporte");
-                textStatus.setTextColor(getColor(R.color.blue));
+
+                labelDataChegada.setText("Estimativa de entrega:");
+
+                if(r.getDataFim().after(r.getDataInicio())) {
+
+                    waitTimer = 300000;
+                    imgStatus.setImageResource(R.mipmap.ic_pacote_em_agencia);
+                    textStatus.setText("Em Agência");
+                    textStatus.setTextColor(getColor(R.color.yellow));
+
+                    Endereco e = r.getDestino();
+                    String ruaNum;
+
+                    if(e.getComplemento() != null) {
+                        ruaNum = String.format("%s, %s, %s",e.getLogradouro(),e.getNumero(),e.getComplemento());
+                    }
+                    else {
+                        ruaNum = String.format("%s, %s",e.getLogradouro(),e.getNumero());
+                    }
+
+                    String bairroCep = String.format("%s, %s",e.getCep(),e.getBairro());
+                    String cidadeEstado = String.format("%s, %s",e.getMunicipio(),e.getEstado());
+
+                    textRuaNum.setText(ruaNum);
+                    textBairroCep.setText(bairroCep);
+                    textCidadeEstado.setText(cidadeEstado);
+
+                    formEmAgencia.setVisibility(View.VISIBLE);
+                }
+                else {
+                    waitTimer = 20000;
+                    imgStatus.setImageResource(R.mipmap.ic_pacote_transporte);
+                    textStatus.setText("Em Transporte");
+                    textStatus.setTextColor(getColor(R.color.blue));
+                }
             }
+        }
+
+        else {
+            waitTimer = 300000;
+            imgStatus.setImageResource(R.mipmap.ic_pacote_em_agencia);
+            textStatus.setText("Sem Rotas Agendadas");
+            textStatus.setTextColor(getColor(R.color.yellow));
         }
 
         remetente.setText(pacote.getRemetente());
